@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>謎解きチャレンジ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">謎解きチャレンジ</h1>
+        
+        <div id="riddle-container" class="space-y-4">
+            <p id="riddle-text" class="text-gray-600 text-lg font-bold"></p>
+            <input type="text" id="answer-input" placeholder="答えを入力" 
+                   class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <button onclick="checkAnswer()" 
+                    class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition">
+                回答する
+            </button>
+            <p id="message" class="mt-4 font-medium text-red-500 hidden"></p>
+        </div>
+
+        <div id="success-container" class="hidden space-y-4">
+            <div class="text-green-500 text-5xl mb-4">🎉</div>
+            <h2 id="result-title" class="text-xl font-bold">正解！</h2>
+            <p id="result-text" class="text-gray-600">次の問題へ進みましょう。</p>
+            <button id="next-btn" onclick="nextQuestion()"
+               class="block w-full bg-green-600 text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition">
+                次へ
+            </button>
+            <a id="target-link" href="https://www.google.com" target="_blank"
+               class="hidden block w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition">
+                ゴールへ移動
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "朝は四本足、昼は二本足、夕方は三本足。これはなに？", a: ["人間", "人"] },
+            { q: "いくら食べてもお腹が減るものは？", a: ["火"] },
+            { q: "いつも何かを食べているのに、何も出さないものは？", a: ["貯金箱"] }
+        ];
+        
+        let currentIdx = 0;
+
+        function init() {
+            document.getElementById('riddle-text').textContent = "第" + (currentIdx + 1) + "問：" + questions[currentIdx].q;
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('answer-input').value.trim();
+            const message = document.getElementById('message');
+            
+            if (questions[currentIdx].a.includes(input)) {
+                showSuccess();
+            } else {
+                message.textContent = "残念！もう一度考えてみてね。";
+                message.classList.remove('hidden');
+            }
+        }
+
+        function showSuccess() {
+            document.getElementById('riddle-container').classList.add('hidden');
+            document.getElementById('success-container').classList.remove('hidden');
+            
+            if (currentIdx === questions.length - 1) {
+                document.getElementById('result-title').textContent = "クリア！";
+                document.getElementById('result-text').textContent = "すべての謎を解き明かしました。";
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('target-link').classList.remove('hidden');
+            }
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            document.getElementById('answer-input').value = "";
+            document.getElementById('message').classList.add('hidden');
+            document.getElementById('riddle-container').classList.remove('hidden');
+            document.getElementById('success-container').classList.add('hidden');
+            init();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
